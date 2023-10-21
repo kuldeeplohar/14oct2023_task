@@ -1,7 +1,7 @@
 'use client'
 //1 import area
 import { MenuItem, Select } from "@mui/material";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
  
 //2 define area
@@ -10,30 +10,49 @@ function Home() {
 //2.1 hooks area
 
 const [stockPrice , setStockPrize] = useState('')
+const [stockName , setStockName] = useState('')
 
-//2.2 function defination area
-const handlechange = (kuldeep)=>{
-  console.log('hello',kuldeep.target.value)
-  
+useEffect(()=>{
+
+     setInterval(function(){
+
+      console.log('okk')
+      getstockprize(stockName)
+     }, 5000);
+}, [stockName])
+
+const getstockprize = (stockName)=>{
   //now call the api
-  fetch('/api/getstockprize').then((res)=>{ return res.json()
+  fetch(`/api/getstockprize?stockName=${stockName 
+  }`).then((res)=>{ return res.json()
   }).then((data)=>{
-    console.log(data.Price)
-    setStockPrize(data.Price)
+    console.log(data.stockPrice1)
+    setStockPrize(data.stockPrice1)
   }).catch((err)=>{
 
   }).finally(()=>{
 
   })
 }
+
+//2.2 function defination area
+const handlechange = (kuldeep)=>{
+
+  setStockName(kuldeep.target.value)
+  console.log('hello',kuldeep.target.value)
+  getstockprize(kuldeep.target.value)
+  
+}
+
  
   return (
     <main >
-      <h1>current stock prize is {stockPrice}</h1>
+      <h1>current stock prize is {stockName}- {stockPrice}</h1>
+    
       <Select   onChange={handlechange} >
-         <MenuItem value='icici'>ICICI BANK</MenuItem>
-         <MenuItem value='hdfc'>HDFC BANK</MenuItem>
-         <MenuItem value='pnb'>PNB BANK</MenuItem>
+         <MenuItem value='ICICI'>ICICI BANK</MenuItem>
+         <MenuItem value='HDFC'>HDFC BANK</MenuItem>
+         <MenuItem value='PNB'>PNB BANK</MenuItem>
       </Select>
     </main>
   )
